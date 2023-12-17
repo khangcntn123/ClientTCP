@@ -5,7 +5,7 @@ Client::Client(QObject *parent)
 {
 	mouseUpdateTimer = new QTimer(this);
 	connect(mouseUpdateTimer, &QTimer::timeout, this, &Client::updateMousePosition);
-	mouseUpdateTimer->start(60);
+	mouseUpdateTimer->start(10);
 
 
 }

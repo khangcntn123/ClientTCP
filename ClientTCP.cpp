@@ -119,18 +119,45 @@ void ClientTCP::device_dataReady(QByteArray data) {
     else {
         int currentSize = buffer;
         buffer += data.size();
-        memcpy(imageData.data() + currentSize, data.data(), data.size()); 
+        if (buffer >= imageSize) {
+            int dataneed = imageSize - currentSize;
+            int datareside = buffer - imageSize;
+            qint64 elapsed = timer.elapsed();
+            QString mystring = QString::number(elapsed);
+            ui->lstConsole->addItem("Time need to receive data:  " + mystring +" ms");
+            memcpy(imageData.data() + currentSize, data.data(), dataneed);
+            emit video_streaming(imageData);
+               imageSize = 0;
+               buffer = 0;
+               imageData.clear();
+            if (datareside > 0) {
+                QByteArray temp;
+                memcpy(temp.data(), data.data() + dataneed, sizeof(int));
+                QDataStream tempstream(&temp, QIODevice::ReadOnly);
+                stream >> imageSize;
+                imageData.resize(imageSize);
+                memcpy(imageData.data(), data.data() + dataneed + sizeof(int), datareside);
+            }
+        }
+        else {
+            memcpy(imageData.data() + currentSize, data.data(), data.size());
+        }
+      
     }
-    if (buffer >= imageSize) {
-        qint64 elapsed = timer.elapsed();
-        QString mystring = QString::number(elapsed);
-        ui->lstConsole->addItem("Time need to receive data:  " + mystring +" ms");
-        //qDebug() << "Time needed to receive data:" << elapsed << "ms";
-        emit video_streaming(imageData);
-        imageSize = 0;
-        buffer = 0;
-        imageData.clear();
-    }
+
+    //if (buffer >= imageSize) {
+    //    int previousdata = buffer - data.size();
+    //    int dataThatMustBeInclude = imageSize - previousdata;
+    //    qint64 elapsed = timer.elapsed();
+    //    QString mystring = QString::number(elapsed);
+    //    ui->lstConsole->addItem("Time need to receive data:  " + mystring +" ms");
+    //    //qDebug() << "Time needed to receive data:" << elapsed << "ms";
+    //    emit video_streaming(imageData);
+    //    imageSize = 0;
+    //    buffer = 0;
+    //    imageData.clear();
+    //}
+ 
 }
 
 
