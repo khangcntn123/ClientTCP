@@ -5,13 +5,15 @@ Client::Client(QObject *parent)
 {
 	mouseUpdateTimer = new QTimer(this);
 	connect(mouseUpdateTimer, &QTimer::timeout, this, &Client::updateMousePosition);
-	mouseUpdateTimer->start(100);
+	mouseUpdateTimer->start(60);
 
 
 }
 
 Client::~Client()
-{}
+{
+    delete mouseUpdateTimer;
+}
 
 void Client::keyPressEvent(QKeyEvent* event)
 {

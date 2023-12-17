@@ -13,6 +13,8 @@
 #include <qmetaobject.h>
 #include "Buffer.h"
 #include "Client.h"
+#include <qelapsedtimer.h>
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class ClientTCP; }
@@ -37,7 +39,7 @@ public:
 signals:
     void video_streaming(QByteArray data);
     void sendimage();
-private slots:
+public slots:
     void on_btnClear_clicked();
     void on_lnIPAddress_textChanged(const QString& arg1);
 
@@ -56,15 +58,15 @@ private slots:
     //void pixmapisready(QPixmap _mpixmap);
 //protected:
 //    void resizeEvent(QResizeEvent* event) override;
-private:
+public:
+    int count = 0;
     //QPixmap currentPixmap;
     QLabel* imageLabel;
     QVBoxLayout* layout;
     Ui::ClientTCPClass *ui;
 
-
-    int imageSize;
-    int count=0;
+    QElapsedTimer timer;
+    int imageSize=0;
     int buffer=0;
 
     void setDeviceController();

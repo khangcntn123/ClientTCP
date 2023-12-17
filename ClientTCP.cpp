@@ -24,10 +24,10 @@ ClientTCP::ClientTCP(QWidget* parent)
     //bufferThread.start();
     //deviceControllerThread.start();
 
-    mouse.moveToThread(&EventThread);
-    connect(&EventThread, &QThread::finished, &EventThread, &QThread::deleteLater);
+    //mouse.moveToThread(&EventThread);
+    //connect(&EventThread, &QThread::finished, &mouse, &QObject::deleteLater);
     connect(&mouse, &Client::send_Event, &_controller, &DeviceController::sendEvents);
-    EventThread.start();
+    //EventThread.start();
     setDeviceController();
 
 }
@@ -40,8 +40,8 @@ ClientTCP::~ClientTCP()
     //deviceControllerThread.wait();
     //delete myBuffer;
     //delete _controller;
-    EventThread.quit();
-    EventThread.wait();
+    //EventThread.quit();
+    //EventThread.wait();
     delete imageLabel;
     delete ui;
 }
@@ -103,65 +103,96 @@ void ClientTCP::device_errorOccurred(QAbstractSocket::SocketError error)
 
 }
 
-
-void ClientTCP::device_dataReady(QByteArray data)
-{   
+void ClientTCP::device_dataReady(QByteArray data) {
     QDataStream stream(&data, QIODevice::ReadOnly);
-    count = count + 1;
-    if (count == 1) {
-        stream >> imageSize;
-        QString pstring = QString::number(imageSize);
-        ui->lstConsole->addItem("Image Size is:" +pstring);
-        int remainingDataSize = data.size() - sizeof(int);
-        imageData = data.mid(sizeof(int), remainingDataSize);
-        buffer = imageData.size();
-        QString p1string = QString::number(buffer);
-        ui->lstConsole->addItem("Image data now is: "+ p1string);
+
+    if (imageSize == 0) {
+        count++;
+        QString count1 = QString::number(count);
+        ui->lstConsole->addItem("Nhan duoc du lieu lan thu " + count1);
+        timer.start();
+        stream >> imageSize; 
+        imageData.resize(imageSize);
+        buffer = data.size() - sizeof(int);
+        memcpy(imageData.data(), data.data() + sizeof(int), buffer);
     }
     else {
+        int currentSize = buffer;
         buffer += data.size();
-        if (buffer >= imageSize) {
-            int previousdata = buffer - data.size();
-            int dataThatMustBeInclude = imageSize - previousdata;
-            QByteArray temp;
-            temp = data.mid(0, dataThatMustBeInclude);
-            QString ps2 = QString::number(dataThatMustBeInclude);
-            ui->lstConsole->addItem("Data that must be included: "+ps2);
-            imageData.append(temp);
-            QString ps11 = QString::number(imageData.size());
-            ui->lstConsole->addItem("Data that after included: " + ps11);
-
-            emit video_streaming(imageData);
-            int dataReside = buffer - imageSize;
-            if (dataReside == 0) {
-                count = 0;
-                imageData.clear();
-                buffer = 0;
-            }
-            else {
-                imageData.clear();
-                QByteArray temp1 = data.mid(dataThatMustBeInclude, dataReside);
-                imageSize = 0;
-                QDataStream stream1(&temp1, QIODevice::ReadOnly);
-                stream1 >> imageSize;
-                QString pstring10 = QString::number(imageSize);
-                ui->lstConsole->addItem("Image Size is:" + pstring10);
-                int remainingDataSize = temp1.size() - sizeof(int);
-                imageData = data.mid(sizeof(int), remainingDataSize);
-                buffer = imageData.size();
-                QString p1string = QString::number(buffer);
-                ui->lstConsole->addItem("Image data now is: " + p1string);
-                count = 1;
-            }
-        }
-        else {
-            imageData.append(data);
-            QString p1string = QString::number(imageData.size());
-            ui->lstConsole->addItem("Image data now is: " + p1string);
-        }
+        memcpy(imageData.data() + currentSize, data.data(), data.size()); 
+    }
+    if (buffer >= imageSize) {
+        qint64 elapsed = timer.elapsed();
+        QString mystring = QString::number(elapsed);
+        ui->lstConsole->addItem("Time need to receive data:  " + mystring +" ms");
+        //qDebug() << "Time needed to receive data:" << elapsed << "ms";
+        emit video_streaming(imageData);
+        imageSize = 0;
+        buffer = 0;
+        imageData.clear();
     }
 }
 
+
+//void ClientTCP::device_dataReady(QByteArray data)
+//{   
+//    QDataStream stream(&data, QIODevice::ReadOnly);
+//    if (imageSize == 0) {
+//        timer.start();
+//        stream >> imageSize;
+//        QString pstring = QString::number(imageSize);
+//        ui->lstConsole->addItem("Image Size is:" +pstring);
+//        int remainingDataSize = data.size() - sizeof(int);
+//        imageData = data.mid(sizeof(int), remainingDataSize);
+//        buffer = imageData.size();
+//        QString p1string = QString::number(buffer);
+//        ui->lstConsole->addItem("Image data now is: "+ p1string);
+//    }
+//    else {
+//        buffer += data.size();
+//        if (buffer >= imageSize) {
+//            int previousdata = buffer - data.size();
+//            int dataThatMustBeInclude = imageSize - previousdata;
+//            QByteArray temp;
+//            temp = data.mid(0, dataThatMustBeInclude);
+//            QString ps2 = QString::number(dataThatMustBeInclude);
+//            ui->lstConsole->addItem("Data that must be included: "+ps2);
+//            imageData.append(temp);
+//            QString ps11 = QString::number(imageData.size());
+//            ui->lstConsole->addItem("Data that after included: " + ps11);
+//            qint64 elapsed = timer.elapsed();
+//            QString elapsedStr = QString::number(elapsed);
+//            ui->lstConsole->addItem("Time that need to receive data: " + elapsedStr + "ms");
+//            emit video_streaming(imageData);
+//            int dataReside = buffer - imageSize;
+//            if (dataReside == 0) {
+//                imageSize = 0;
+//                imageData.clear();
+//                buffer = 0;
+//            }
+//            else {
+//                imageData.clear();
+//                QByteArray temp1 = data.mid(dataThatMustBeInclude, dataReside);
+//                imageSize = 0;
+//                QDataStream stream1(&temp1, QIODevice::ReadOnly);
+//                stream1 >> imageSize;
+//                QString pstring10 = QString::number(imageSize);
+//                ui->lstConsole->addItem("Image Size is:" + pstring10);
+//                int remainingDataSize = temp1.size() - sizeof(int);
+//                imageData = data.mid(sizeof(int), remainingDataSize);
+//                buffer = imageData.size();
+//                QString p1string = QString::number(buffer);
+//                ui->lstConsole->addItem("Image data now is: " + p1string);
+//            }
+//        }
+//        else {
+//            imageData.append(data);
+//            QString p1string = QString::number(imageData.size());
+//            ui->lstConsole->addItem("Image data now is: " + p1string);
+//        }
+//    }
+//}
+//
 
 
 
@@ -169,7 +200,9 @@ void ClientTCP::device_dataReady(QByteArray data)
 
 
 void ClientTCP::my_video_streaming(QByteArray data) {
-    emit sendimage();
+
+    timer.start();
+
     QPixmap pixmap;
     pixmap.loadFromData(data);
 
@@ -179,6 +212,13 @@ void ClientTCP::my_video_streaming(QByteArray data) {
     imageLabel->setScaledContents(true);
     imageLabel->show();
     imageLabel->update();
+    qint64 kekeke= timer.elapsed();
+    QString kkk = QString::number(kekeke);
+    ui->lstConsole->addItem("Thoi gian hien anh len man hinh :" + kkk + "ms");
+    QString count1 = QString::number(count);
+    ui->lstConsole->addItem("yeu cau ben kia gui hinh anh lan : " + count1);
+    emit sendimage();
+    ui->lstConsole->addItem("Da gui tin hieu keu gui hinh anh ");
 
 }
 
