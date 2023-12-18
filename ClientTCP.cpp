@@ -26,7 +26,7 @@ ClientTCP::ClientTCP(QWidget* parent)
 
     //mouse.moveToThread(&EventThread);
     //connect(&EventThread, &QThread::finished, &mouse, &QObject::deleteLater);
-    connect(&mouse, &Client::send_Event, &_controller, &DeviceController::sendEvents);
+    //connect(&mouse, &Client::send_Event, &_controller, &DeviceController::sendEvents);
     //EventThread.start();
     setDeviceController();
 
@@ -78,6 +78,7 @@ void ClientTCP::on_btnConnect_clicked()
 void ClientTCP::device_connected()
 {
     ui->lstConsole->addItem("Connected To Device");
+    //connect(&mouse, &Client::send_Event, &_controller, &DeviceController::sendEvents);
     ui->btnConnect->setText("Disconnect");
     ui->grpSendData->setEnabled(true);
 }
@@ -103,8 +104,53 @@ void ClientTCP::device_errorOccurred(QAbstractSocket::SocketError error)
 
 }
 
+
+
+
 void ClientTCP::device_dataReady(QByteArray data) {
+    //QDataStream stream(&data, QIODevice::ReadOnly);
+
+    //if (imageSize == 0) {
+    //    count++;
+    //    QString count1 = QString::number(count);
+    //    ui->lstConsole->addItem("Nhan duoc du lieu lan thu " + count1);
+    //    timer.start();
+    //    stream >> imageSize;
+    //    imageData = QByteArray(); 
+    //    imageData.resize(imageSize);
+    //    int datasize = imageData.size();
+    //    QString qs1 = QString::number(datasize);
+    //    ui->lstConsole->addItem("Kich thuoc anh la: " + qs1);
+    //    buffer = data.size() - sizeof(int);
+    //    //imageData = data.mid(sizeof(int), data.size() - sizeof(int));
+    //    memcpy(imageData.data(), data.data() + sizeof(int), buffer);
+    //}else{
+    //    int currentSize = buffer;
+    //    QString qs2 = QString::number(currentSize);
+    //    ui->lstConsole->addItem("buffer hien tai : " + qs2);
+
+    //    buffer += data.size();
+    //    QString qs3 = QString::number(buffer);
+    //    ui->lstConsole->addItem("buffer sau khi them du lieu: " + qs3);
+    //    QString qs4 = QString::number(imageData.size());
+    //    ui->lstConsole->addItem("Du lieu anh hien tai la: " + qs4);
+    //    if (buffer > imageData.size()) {
+    //        MessageBox(NULL, TEXT("Tran du lieu"), TEXT("Title of the Message Box"), MB_OK);
+    //    }
+    //    //imageData.append(data);
+    //    memcpy(imageData.data() + currentSize, data.data(), data.size());
+    //}
+    //if (buffer >= imageSize) {
+    //    qint64 elapsed = timer.elapsed();
+    //    QString mystring = QString::number(elapsed);
+    //    ui->lstConsole->addItem("Time need to receive data:  " + mystring + " ms");
+    //    //qDebug() << "Time needed to receive data:" << elapsed << "ms";
+    //    emit video_streaming(imageData);
+    //    imageSize = 0;
+    //    buffer = 0;
+    //    imageData.clear();
     QDataStream stream(&data, QIODevice::ReadOnly);
+    MessageBox(NULL, TEXT("Nhan duoc du lieu"), TEXT("Title of the Message Box"), MB_OK);
 
     if (imageSize == 0) {
         count++;
@@ -126,6 +172,8 @@ void ClientTCP::device_dataReady(QByteArray data) {
             QString mystring = QString::number(elapsed);
             ui->lstConsole->addItem("Time need to receive data:  " + mystring +" ms");
             memcpy(imageData.data() + currentSize, data.data(), dataneed);
+            MessageBox(NULL, TEXT("Tha ra tin hieu de hien thi hinh anh"), TEXT("Title of the Message Box"), MB_OK);
+
             emit video_streaming(imageData);
                imageSize = 0;
                buffer = 0;
@@ -227,6 +275,7 @@ void ClientTCP::device_dataReady(QByteArray data) {
 
 
 void ClientTCP::my_video_streaming(QByteArray data) {
+    MessageBox(NULL, TEXT("Hien thi duoc anh"), TEXT("Title of the Message Box"), MB_OK);
 
     timer.start();
 

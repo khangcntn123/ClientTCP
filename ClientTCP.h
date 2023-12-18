@@ -14,7 +14,7 @@
 #include "Buffer.h"
 #include "Client.h"
 #include <qelapsedtimer.h>
-
+#include <Windows.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class ClientTCP; }
@@ -33,12 +33,13 @@ public:
     //QThread deviceControllerThread;
     //Buffer* myBuffer = new Buffer;
     //DeviceController* _controller = new DeviceController;
-    Client mouse;
+    //Client mouse;
     DeviceController _controller;
     QByteArray imageData;
 signals:
     void video_streaming(QByteArray data);
     void sendimage();
+
 public slots:
     void on_btnClear_clicked();
     void on_lnIPAddress_textChanged(const QString& arg1);

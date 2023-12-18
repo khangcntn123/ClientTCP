@@ -5,6 +5,8 @@
 #include <QtNetwork/qabstractsocket.h>
 #include <qdatastream.h>
 #include <thread>
+#include <Windows.h>
+
 
 class DeviceController : public QObject
 {

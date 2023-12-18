@@ -77,5 +77,7 @@ void DeviceController::sendimagesignal() {
     int x = 9;
     QDataStream _mstream(&data, QIODevice::WriteOnly);
     _mstream << x;
+    //MessageBox(NULL, TEXT("This is the message"), TEXT("Title of the Message Box"), MB_OK);
     _socket.write(data);
+
 }
