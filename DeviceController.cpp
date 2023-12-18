@@ -69,6 +69,8 @@ void DeviceController::sendEvents(int a, int x, int y) {
     _mstream << a;
     _mstream << x;
     _mstream << y;
+    //MessageBox(NULL, TEXT("Da gui du lieu cua chuot va ban phim di"), TEXT("Title of the Message Box"), MB_OK);
+
     _socket.write(data);
 }
 

@@ -33,7 +33,7 @@ public:
     //QThread deviceControllerThread;
     //Buffer* myBuffer = new Buffer;
     //DeviceController* _controller = new DeviceController;
-    //Client mouse;
+    Client mouse;
     DeviceController _controller;
     QByteArray imageData;
 signals:
@@ -69,8 +69,11 @@ public:
     QElapsedTimer timer;
     int imageSize=0;
     int buffer=0;
-
+    void mousePressEvent(QMouseEvent* event);
     void setDeviceController();
+    void mouseReleaseEvent(QMouseEvent* event);
+    //void mouseDoubleClickEvent(QMouseEvent* event);
+    void keyPressEvent(QKeyEvent* event);
 };
 
 
