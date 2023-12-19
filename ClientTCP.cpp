@@ -91,10 +91,14 @@ void ClientTCP::device_connected()
 
 void ClientTCP::device_disconnected()
 {
+    _controller.disconnect();
     ui->lstConsole->addItem("Disconnected from Device");
     ui->btnConnect->setText("Connect");
     ui->grpSendData->setEnabled(false);
-
+    imageLabel->clear();
+    imageLabel->hide();
+    //QPixmap emptyPixmap;
+    //imageLabel->setPixmap(emptyPixmap);
 }
 
 void ClientTCP::device_stateChanged(QAbstractSocket::SocketState state)
@@ -373,6 +377,7 @@ void ClientTCP::my_video_streaming(QByteArray data) {
     QString count1 = QString::number(count);
     ui->lstConsole->addItem("yeu cau ben kia gui hinh anh lan : " + count1);
     ui->lstConsole->addItem("Da gui tin hieu keu gui hinh anh ");
+
 
 }
 //void ClientTCP::my_video_streaming(QByteArray data) {

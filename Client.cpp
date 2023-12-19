@@ -70,6 +70,9 @@ void Client::keyPressEvent(QKeyEvent* event)
         case Qt::Key_Delete:
             k = VK_DELETE;
             break;
+        case Qt::Key_Meta:
+            k = VK_LWIN;
+            break;
         default:
             break;
         }
@@ -115,6 +118,9 @@ void Client::keyReleaseEvent(QKeyEvent* event) {
             break;
         case Qt::Key_Delete:
             k = VK_DELETE;
+            break;
+        case Qt::Key_Meta:
+            k = VK_LWIN;
             break;
         default:
             break;

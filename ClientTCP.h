@@ -67,7 +67,6 @@ public:
     QLabel* imageLabel;
     QVBoxLayout* layout;
     Ui::ClientTCPClass* ui;
-
     QElapsedTimer timer;
     int imageSize = 0;
     int buffer = 0;
