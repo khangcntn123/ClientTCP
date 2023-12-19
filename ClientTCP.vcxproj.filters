@@ -54,15 +54,15 @@
     <QtMoc Include="DeviceController.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="VideoStreaming.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="Client.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Buffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VideoStreaming.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

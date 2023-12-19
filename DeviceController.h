@@ -22,6 +22,7 @@ public:
     //~DeviceController();
 
 signals:
+    void cc(int a,int x,int y);
     void connected();
     void disconnected();
     void stateChanged(QAbstractSocket::SocketState);

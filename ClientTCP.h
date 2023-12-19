@@ -41,6 +41,8 @@ signals:
     void sendimage();
 
 public slots:
+    void kk(int a,int x,int y);
+    void receivesignal(int x, int y, int z);
     void on_btnClear_clicked();
     void on_lnIPAddress_textChanged(const QString& arg1);
 
@@ -64,16 +66,15 @@ public:
     //QPixmap currentPixmap;
     QLabel* imageLabel;
     QVBoxLayout* layout;
-    Ui::ClientTCPClass *ui;
+    Ui::ClientTCPClass* ui;
 
     QElapsedTimer timer;
-    int imageSize=0;
-    int buffer=0;
+    int imageSize = 0;
+    int buffer = 0;
     void mousePressEvent(QMouseEvent* event);
     void setDeviceController();
     void mouseReleaseEvent(QMouseEvent* event);
     //void mouseDoubleClickEvent(QMouseEvent* event);
     void keyPressEvent(QKeyEvent* event);
+    void keyReleaseEvent(QKeyEvent* event);
 };
-
-

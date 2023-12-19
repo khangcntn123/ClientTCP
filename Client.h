@@ -19,22 +19,22 @@ class Client : public QMainWindow
     Q_OBJECT
 
 public:
-    int countPress= 0;
+    int countPress = 0;
     int countRelease = 0;
-    Client(QWidget *parent = nullptr);
+    Client(QWidget* parent = nullptr);
     // void mouseMoveEvent(QMouseEvent* event);
     void mousePressEvent(QMouseEvent* event);
     void mouseReleaseEvent(QMouseEvent* event);
     void mouseDoubleClickEvent(QMouseEvent* event);
     void keyPressEvent(QKeyEvent* event);
-   // void keyReleaseEvent(QKeyEvent* event);
+    void keyReleaseEvent(QKeyEvent* event);
     //Socket sk;
     ~Client();
 public slots:
     void updateMousePosition();
 
 signals:
-    	void send_Event(int a, int k,  int y);
+    void send_Event(int a, int k, int y);
 private:
     //Ui::CLIENTClass ui;
     QTimer* mouseUpdateTimer;
@@ -79,4 +79,3 @@ private:
 //private:
 //	QTimer* mouseUpdateTimer;
 //};
-//

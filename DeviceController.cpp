@@ -2,7 +2,7 @@
 
 DeviceController::DeviceController(QObject* parent)
     : QObject{ parent }
-{   
+{
     connect(&_socket, &QTcpSocket::connected, this, &DeviceController::connected);
     connect(&_socket, &QTcpSocket::disconnected, this, &DeviceController::disconnected);
     connect(&_socket, &QTcpSocket::errorOccurred, this, &DeviceController::errorOccurred);
@@ -69,6 +69,7 @@ void DeviceController::sendEvents(int a, int x, int y) {
     _mstream << a;
     _mstream << x;
     _mstream << y;
+    emit cc(a,x,y);
     //MessageBox(NULL, TEXT("Da gui du lieu cua chuot va ban phim di"), TEXT("Title of the Message Box"), MB_OK);
 
     _socket.write(data);
@@ -83,3 +84,4 @@ void DeviceController::sendimagesignal() {
     _socket.write(data);
 
 }
+

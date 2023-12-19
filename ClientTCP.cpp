@@ -9,26 +9,26 @@ QThread EventThread;
 ClientTCP::ClientTCP(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::ClientTCPClass)
-{   
+{
 
     ui->setupUi(this);
     imageLabel = new QLabel(this);
 
-/*    myBuffer->moveToThread(&bufferThread);
-    _controller->moveToThread(&deviceControllerThread)*/;
+    /*    myBuffer->moveToThread(&bufferThread);
+        _controller->moveToThread(&deviceControllerThread)*/;
 
-    //connect(&bufferThread, &QThread::finished,&bufferThread, &QThread::deleteLater);
-    //connect(&deviceControllerThread, &QThread::finished,& deviceControllerThread, &QThread::deleteLater);
-    //connect(_controller, &DeviceController::dataReady, myBuffer, &Buffer::dataReceived);
-    //connect(myBuffer, &Buffer::pixmapispop, this, &ClientTCP::updateImageLabel, Qt::QueuedConnection);
-    //bufferThread.start();
-    //deviceControllerThread.start();
+        //connect(&bufferThread, &QThread::finished,&bufferThread, &QThread::deleteLater);
+        //connect(&deviceControllerThread, &QThread::finished,& deviceControllerThread, &QThread::deleteLater);
+        //connect(_controller, &DeviceController::dataReady, myBuffer, &Buffer::dataReceived);
+        //connect(myBuffer, &Buffer::pixmapispop, this, &ClientTCP::updateImageLabel, Qt::QueuedConnection);
+        //bufferThread.start();
+        //deviceControllerThread.start();
 
-    //mouse.moveToThread(&EventThread);
-    //connect(&EventThread, &QThread::finished, &mouse, &QObject::deleteLater);
-    //connect(&mouse, &Client::send_Event, &_controller, &DeviceController::sendEvents);
-    //EventThread.start();
-    setDeviceController();
+        //mouse.moveToThread(&EventThread);
+        //connect(&EventThread, &QThread::finished, &mouse, &QObject::deleteLater);
+        //connect(&mouse, &Client::send_Event, &_controller, &DeviceController::sendEvents);
+        //EventThread.start();
+        setDeviceController();
 
 }
 
@@ -44,6 +44,11 @@ ClientTCP::~ClientTCP()
     //EventThread.wait();
     delete imageLabel;
     delete ui;
+}
+
+void ClientTCP::receivesignal(int x, int y, int z) {
+    QString kk = QString::number(x);
+    if (x > 0) ui->lstConsole->addItem("Type: " + kk);
 }
 
 void ClientTCP::on_lnIPAddress_textChanged(const QString& arg1)
@@ -79,6 +84,7 @@ void ClientTCP::device_connected()
 {
     ui->lstConsole->addItem("Connected To Device");
     connect(&mouse, &Client::send_Event, &_controller, &DeviceController::sendEvents);
+    connect(&mouse, &Client::send_Event, this, &ClientTCP::receivesignal);
     ui->btnConnect->setText("Disconnect");
     ui->grpSendData->setEnabled(true);
 }
@@ -105,22 +111,22 @@ void ClientTCP::device_errorOccurred(QAbstractSocket::SocketError error)
 }
 
 void ClientTCP::device_dataReady(QByteArray data) {
-   
+
     QDataStream stream(&data, QIODevice::ReadOnly);
 
     if (imageSize == 0) {
-      
+
         timer.start();
-        stream >> imageSize; 
+        stream >> imageSize;
 
         imageData.resize(imageSize);
         buffer = data.size() - sizeof(int);
-        memcpy(imageData.data(), data.data() + sizeof(int), buffer); 
+        memcpy(imageData.data(), data.data() + sizeof(int), buffer);
     }
     else {
         int currentSize = buffer;
         buffer += data.size();
-        memcpy(imageData.data() + currentSize, data.data(), data.size()); 
+        memcpy(imageData.data() + currentSize, data.data(), data.size());
     }
 
     if (buffer >= imageSize) {
@@ -138,19 +144,21 @@ void ClientTCP::device_dataReady(QByteArray data) {
 }
 
 void ClientTCP::mousePressEvent(QMouseEvent* event) {
-    //mouse.mousePressEvent(event);
-    QString kaka = QString::number(mouse.countPress);
-    ui->lstConsole->addItem("Press : " + kaka);
+    mouse.mousePressEvent(event);
+    //QString kaka = QString::number(mouse.countPress);
+    //ui->lstConsole->addItem("Press : " + kaka);
 
 }
 void ClientTCP::mouseReleaseEvent(QMouseEvent* event) {
     mouse.mouseReleaseEvent(event);
-    QString kaka = QString::number(mouse.countRelease);
-    ui->lstConsole->addItem("Release : " + kaka);
+    //QString kaka = QString::number(mouse.countRelease);
+    //ui->lstConsole->addItem("Release : " + kaka);
 }
 void ClientTCP::keyPressEvent(QKeyEvent* event) {
     mouse.keyPressEvent(event);
-
+}
+void ClientTCP::keyReleaseEvent(QKeyEvent* event) {
+    mouse.keyReleaseEvent(event);
 }
 
 
@@ -284,7 +292,6 @@ void ClientTCP::keyPressEvent(QKeyEvent* event) {
 // 
 //}
 //
-
 //void ClientTCP::device_dataReady(QByteArray data)
 //{   
 //    QDataStream stream(&data, QIODevice::ReadOnly);
@@ -345,11 +352,6 @@ void ClientTCP::keyPressEvent(QKeyEvent* event) {
 //}
 //
 
-
-
-
-
-
 void ClientTCP::my_video_streaming(QByteArray data) {
     //MessageBox(NULL, TEXT("Hien thi duoc anh"), TEXT("Title of the Message Box"), MB_OK);
     emit sendimage();
@@ -365,7 +367,7 @@ void ClientTCP::my_video_streaming(QByteArray data) {
     imageLabel->setScaledContents(true);
     imageLabel->show();
     imageLabel->update();
-    qint64 kekeke= timer.elapsed();
+    qint64 kekeke = timer.elapsed();
     QString kkk = QString::number(kekeke);
     ui->lstConsole->addItem("Thoi gian hien anh len man hinh :" + kkk + "ms");
     QString count1 = QString::number(count);
@@ -373,9 +375,6 @@ void ClientTCP::my_video_streaming(QByteArray data) {
     ui->lstConsole->addItem("Da gui tin hieu keu gui hinh anh ");
 
 }
-
-
-
 //void ClientTCP::my_video_streaming(QByteArray data) {
 //    QThread* thread = QThread::create([=]() {
 //        QPixmap pixmap;
@@ -389,7 +388,6 @@ void ClientTCP::my_video_streaming(QByteArray data) {
 //
 //    thread->start();
 //}
-
 //void ClientTCP::updateImageLabel(QPixmap pixmap) {
 //    imageLabel->setGeometry(this->rect());
 //    imageLabel->setPixmap(pixmap);
@@ -397,37 +395,39 @@ void ClientTCP::my_video_streaming(QByteArray data) {
 //    imageLabel->show();
 //    imageLabel->update();
 //}
-
 void ClientTCP::setDeviceController()
-{   
+{
     connect(&_controller, &DeviceController::connected, this, &ClientTCP::device_connected);
     connect(&_controller, &DeviceController::disconnected, this, &ClientTCP::device_disconnected);
     connect(&_controller, &DeviceController::stateChanged, this, &ClientTCP::device_stateChanged);
     connect(&_controller, &DeviceController::errorOccurred, this, &ClientTCP::device_errorOccurred);
-    
+    connect(&_controller, &DeviceController::cc, this, &ClientTCP::kk);
     //connect(this, &ClientTCP::mousePressEvent, &mouse, &Client::mousePressEvent);
-    //connect(&_controller, &DeviceController::dataReady, this, &ClientTCP::device_dataReady);
-    //connect(this, &ClientTCP::sendimage, &_controller, &DeviceController::sendimagesignal);
+    connect(&_controller, &DeviceController::dataReady, this, &ClientTCP::device_dataReady);
+    connect(this, &ClientTCP::sendimage, &_controller, &DeviceController::sendimagesignal);
     //connect(&myBuffer, &Buffer::pixmapispop, this, &ClientTCP::updateImageLabel);
-    //connect(this, &ClientTCP::video_streaming, this, &ClientTCP::my_video_streaming);
+    connect(this, &ClientTCP::video_streaming, this, &ClientTCP::my_video_streaming);
 }
 
-
+void ClientTCP::kk(int a,int x,int y) {
+    if (a > 0) {
+        QString kkk = QString::number(a);
+        QString kk = QString::number(x);
+        QString k = QString::number(y);
+        ui->lstConsole->addItem("Data: " + kkk+ " " + kk + " " + k);
+    }
+}
 
 //void ClientTCP::pixmapisready(QPixmap _mpixmap) {
 //    updateImageLabel(_mpixmap);
 //  
 //}
-
 void ClientTCP::on_btnSend_clicked()
 {
     auto message = ui->lnMessage->text().trimmed();
     _controller.send(message);
 }
-
 void ClientTCP::on_btnClear_clicked() {
     ui->lstConsole->clear();
 
 }
-
-
