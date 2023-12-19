@@ -83,8 +83,8 @@ void ClientTCP::on_btnConnect_clicked()
 void ClientTCP::device_connected()
 {
     ui->lstConsole->addItem("Connected To Device");
-    connect(&mouse, &Client::send_Event, &_controller, &DeviceController::sendEvents);
-    connect(&mouse, &Client::send_Event, this, &ClientTCP::receivesignal);
+    connect(&mouse, &Mouse_Keyboard::send_Event, &_controller, &DeviceController::sendEvents);
+    connect(&mouse, &Mouse_Keyboard::send_Event, this, &ClientTCP::receivesignal);
     ui->btnConnect->setText("Disconnect");
     ui->grpSendData->setEnabled(true);
 }

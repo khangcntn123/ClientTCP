@@ -12,7 +12,7 @@
 #include <QThread>
 #include <qmetaobject.h>
 #include "Buffer.h"
-#include "Client.h"
+#include "Mouse_Keyboard.h"
 #include <qelapsedtimer.h>
 #include <Windows.h>
 
@@ -33,7 +33,7 @@ public:
     //QThread deviceControllerThread;
     //Buffer* myBuffer = new Buffer;
     //DeviceController* _controller = new DeviceController;
-    Client mouse;
+    Mouse_Keyboard mouse;
     DeviceController _controller;
     QByteArray imageData;
 signals:

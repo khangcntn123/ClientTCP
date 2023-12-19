@@ -46,7 +46,7 @@
     <ClCompile Include="VideoStreaming.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Client.cpp">
+    <ClCompile Include="Mouse_Keyboard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -54,7 +54,7 @@
     <QtMoc Include="DeviceController.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Client.h">
+    <QtMoc Include="Mouse_Keyboard.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

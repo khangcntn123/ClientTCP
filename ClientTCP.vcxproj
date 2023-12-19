@@ -101,7 +101,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Client.cpp" />
+    <ClCompile Include="Mouse_Keyboard.cpp" />
     <ClCompile Include="VideoStreaming.cpp" />
     <QtRcc Include="ClientTCP.qrc" />
     <QtUic Include="ClientTCP.ui" />
@@ -116,7 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Buffer.h" />
-    <QtMoc Include="Client.h" />
+    <QtMoc Include="Mouse_Keyboard.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="VideoStreaming.h" />
