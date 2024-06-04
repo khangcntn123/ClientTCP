@@ -1,3 +1,5 @@
+
+//kkkkkkk
 //#include "Buffer.h"
 //
 //Buffer::Buffer(QObject *parent)
